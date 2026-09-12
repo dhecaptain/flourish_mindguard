@@ -1,122 +1,66 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
-  ArrowUpRight,
-  BookOpen,
-  Check,
-  ChevronRight,
-  CircleHelp,
-  Heart,
-  Home,
-  Leaf,
-  Menu,
-  MessageCircle,
-  MoreHorizontal,
-  Play,
-  Plus,
-  Search,
-  Sparkles,
-  Sun,
-  Timer,
-  Wind,
-  X,
+  ArrowUpRight, BookOpen, Check, ChevronDown, ChevronRight, CircleHelp, Heart,
+  Home, Leaf, Menu, MessageCircle, MoreHorizontal, Play, Plus, Search, Settings,
+  Sparkles, Sun, Timer, Wind, X, Bookmark, Bell, Palette, UserRound, ShieldCheck,
 } from 'lucide-react'
 
-const moods = [
-  { label: 'Low', icon: '−', tone: 'mood-low' },
-  { label: 'Okay', icon: '•', tone: 'mood-okay' },
-  { label: 'Good', icon: '◒', tone: 'mood-good' },
-  { label: 'Great', icon: '✦', tone: 'mood-great' },
-]
+type View = 'Today' | 'Explore' | 'Journal' | 'Support' | 'Profile'
 
+const moods = [
+  { label: 'Low', icon: '−', tone: 'mood-low' }, { label: 'Okay', icon: '•', tone: 'mood-okay' },
+  { label: 'Good', icon: '◒', tone: 'mood-good' }, { label: 'Great', icon: '✦', tone: 'mood-great' },
+]
 const activities = [
   { title: 'Reset your nervous system', detail: 'A 4-minute breathing practice', time: '4 min', icon: Wind, color: 'sage' },
   { title: 'Put it into words', detail: 'A guided reflection for today', time: '8 min', icon: BookOpen, color: 'peach' },
 ]
+const resources = [
+  { title: 'A softer start', detail: 'A three-minute morning grounding practice.', category: 'Breathe', time: '3 min', icon: Sun, tone: 'sage' },
+  { title: 'Name what is here', detail: 'A gentle prompt for meeting your feelings.', category: 'Reflect', time: '8 min', icon: BookOpen, tone: 'peach' },
+  { title: 'Let your body lead', detail: 'Small movements to come back to yourself.', category: 'Move', time: '6 min', icon: Leaf, tone: 'blue' },
+  { title: 'The pause practice', detail: 'A quiet reset for a busy afternoon.', category: 'Rest', time: '5 min', icon: Wind, tone: 'lavender' },
+]
 
 function WardOrb({ small = false }: { small?: boolean }) {
-  return (
-    <div className={`ward-orb ${small ? 'ward-orb-small' : ''}`} aria-label="Ward, your MindGuard companion">
-      <div className="ward-halo" />
-      <div className="ward-body">
-        <div className="ward-ear ward-ear-left" />
-        <div className="ward-ear ward-ear-right" />
-        <div className="ward-face">
-          <span className="ward-eye" />
-          <span className="ward-eye" />
-          <span className="ward-smile" />
-        </div>
-        <span className="ward-spark ward-spark-one">✦</span>
-        <span className="ward-spark ward-spark-two">·</span>
-      </div>
-    </div>
-  )
+  return <div className={`ward-orb ${small ? 'ward-orb-small' : ''}`} aria-label="Ward, your MindGuard companion"><div className="ward-halo" /><div className="ward-body"><div className="ward-ear ward-ear-left" /><div className="ward-ear ward-ear-right" /><div className="ward-face"><span className="ward-eye" /><span className="ward-eye" /><span className="ward-smile" /></div><span className="ward-spark ward-spark-one">✦</span><span className="ward-spark ward-spark-two">·</span></div></div>
 }
 
-function SideNav({ active, onChange }: { active: string; onChange: (item: string) => void }) {
-  const items = [
-    { label: 'Today', icon: Home },
-    { label: 'Explore', icon: Search },
-    { label: 'Journal', icon: BookOpen },
-  ]
-  return (
-    <aside className="side-nav">
-      <div className="brand-mark"><span>m</span></div>
-      <p className="brand-name">mindguard</p>
-      <nav aria-label="Primary navigation" className="nav-links">
-        {items.map(({ label, icon: Icon }) => (
-          <button key={label} className={`nav-link ${active === label ? 'nav-link-active' : ''}`} onClick={() => onChange(label)} aria-current={active === label ? 'page' : undefined}>
-            <Icon aria-hidden="true" />
-            <span>{label}</span>
-          </button>
-        ))}
-      </nav>
-      <div className="side-bottom">
-        <button className="nav-link" onClick={() => onChange('Help')}><CircleHelp aria-hidden="true" /><span>Support</span></button>
-        <div className="profile-chip"><div className="avatar">A</div><div><strong>Alex</strong><span>Growing daily</span></div><MoreHorizontal aria-hidden="true" /></div>
-      </div>
-    </aside>
-  )
+function SideNav({ active, onChange }: { active: View; onChange: (item: View) => void }) {
+  const items: { label: View; icon: typeof Home }[] = [{ label: 'Today', icon: Home }, { label: 'Explore', icon: Search }, { label: 'Journal', icon: BookOpen }]
+  return <aside className="side-nav"><div className="brand-mark"><span>m</span></div><p className="brand-name">mindguard</p><nav aria-label="Primary navigation" className="nav-links">{items.map(({ label, icon: Icon }) => <button key={label} className={`nav-link ${active === label ? 'nav-link-active' : ''}`} onClick={() => onChange(label)} aria-current={active === label ? 'page' : undefined}><Icon aria-hidden="true" /><span>{label}</span></button>)}</nav><div className="side-bottom"><button className={`nav-link ${active === 'Support' ? 'nav-link-active' : ''}`} onClick={() => onChange('Support')}><CircleHelp aria-hidden="true" /><span>Support</span></button><button className={`nav-link ${active === 'Profile' ? 'nav-link-active' : ''}`} onClick={() => onChange('Profile')}><Settings aria-hidden="true" /><span>Profile</span></button><div className="profile-chip"><div className="avatar">A</div><div><strong>Alex</strong><span>Growing daily</span></div><MoreHorizontal aria-hidden="true" /></div></div></aside>
 }
 
 function MoodCheckIn({ selected, onSelect }: { selected: string | null; onSelect: (mood: string) => void }) {
-  return (
-    <section className="surface mood-card">
-      <div className="section-kicker"><Sun aria-hidden="true" /> DAILY CHECK-IN</div>
-      <div className="mood-heading"><div><h2>How are you arriving today?</h2><p>A tiny check-in is a powerful way to notice yourself.</p></div><span className="date-pill">Tuesday, Sep 12</span></div>
-      <div className="mood-options" role="group" aria-label="Choose your mood">
-        {moods.map((mood) => <button key={mood.label} className={`mood-option ${mood.tone} ${selected === mood.label ? 'mood-selected' : ''}`} onClick={() => onSelect(mood.label)} aria-pressed={selected === mood.label}><span>{mood.icon}</span><small>{mood.label}</small></button>)}
-      </div>
-      {selected && <p className="saved-note"><Check aria-hidden="true" /> Noted. Thank you for checking in with yourself.</p>}
-    </section>
-  )
+  return <section className="surface mood-card"><div className="section-kicker"><Sun aria-hidden="true" /> DAILY CHECK-IN</div><div className="mood-heading"><div><h2>How are you arriving today?</h2><p>A tiny check-in is a powerful way to notice yourself.</p></div><span className="date-pill">Tuesday, Sep 12</span></div><div className="mood-options" role="group" aria-label="Choose your mood">{moods.map((mood) => <button key={mood.label} className={`mood-option ${mood.tone} ${selected === mood.label ? 'mood-selected' : ''}`} onClick={() => onSelect(mood.label)} aria-pressed={selected === mood.label}><span>{mood.icon}</span><small>{mood.label}</small></button>)}</div>{selected && <p className="saved-note"><Check aria-hidden="true" /> Noted. Thank you for checking in with yourself.</p>}</section>
+}
+function ActivityCard({ activity, completed, onComplete }: { activity: typeof activities[number]; completed: boolean; onComplete: () => void }) { const Icon = activity.icon; return <article className={`activity-card activity-${activity.color} ${completed ? 'activity-complete' : ''}`}><div className="activity-icon"><Icon aria-hidden="true" /></div><div className="activity-copy"><span className="activity-tag">{completed ? 'COMPLETED' : 'FOR YOU'}</span><h3>{activity.title}</h3><p>{activity.detail}</p><span className="activity-time"><Timer aria-hidden="true" /> {activity.time}</span></div><button className="activity-action" onClick={onComplete} aria-label={completed ? `Completed: ${activity.title}` : `Start ${activity.title}`}>{completed ? <Check aria-hidden="true" /> : <Play aria-hidden="true" />}</button></article> }
+
+function TodayView({ mood, setMood, completed, setCompleted, onExplore, onChat }: { mood: string | null; setMood: (m: string) => void; completed: number[]; setCompleted: (fn: (v: number[]) => number[]) => void; onExplore: () => void; onChat: () => void }) {
+  return <><section className="welcome-row"><div><p className="eyebrow">A soft place to land</p><h1>Good morning, Alex<span className="sun-dot">.</span></h1><p className="intro">You don&apos;t have to have it all figured out. Just be here for this moment.</p></div><div className="streak-card"><div className="streak-flame">✦</div><div><strong>6 day</strong><span>mindful streak</span></div><div className="streak-progress"><i /><i /><i /><i /><i /><i className="filled" /><i className="today" /></div></div></section><section className="ward-hero"><div className="hero-copy"><span className="hero-label"><Sparkles aria-hidden="true" /> YOUR COMPANION</span><h2>Meet Ward.</h2><p>Thoughtful support, whenever you need a little more room to breathe. No judgment, no fixing — just a place to start.</p><button className="text-button" onClick={onChat}>Say hello <ArrowUpRight aria-hidden="true" /></button></div><WardOrb /></section><div className="dashboard-grid"><div className="left-column"><MoodCheckIn selected={mood} onSelect={setMood} /><section className="section-block"><div className="section-heading"><div><span className="section-kicker"><Leaf aria-hidden="true" /> A LITTLE SOMETHING</span><h2>Made for your moment</h2></div><button className="see-all" onClick={onExplore}>See all <ChevronRight aria-hidden="true" /></button></div><div className="activity-list">{activities.map((activity, index) => <ActivityCard key={activity.title} activity={activity} completed={completed.includes(index)} onComplete={() => setCompleted((current) => current.includes(index) ? current.filter((item) => item !== index) : [...current, index])} />)}</div></section></div><aside className="right-column"><RhythmCard /><section className="affirmation-card"><div className="affirmation-mark">“</div><p>You are allowed to take things one breath at a time.</p><span>— a note for today</span></section><MomentsCard /></aside></div></>
+}
+function RhythmCard() { return <section className="surface rhythm-card"><div className="section-heading"><div><span className="section-kicker">YOUR RHYTHM</span><h2>This week</h2></div><button className="more-button" aria-label="More rhythm options"><MoreHorizontal aria-hidden="true" /></button></div><div className="week-graph"><div className="graph-line" /><div className="graph-days">{['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => <div key={`${day}-${i}`} className={i === 1 ? 'graph-day-current' : ''}><span className={`graph-bar graph-bar-${i}`} /><small>{day}</small></div>)}</div></div><div className="rhythm-footer"><span><strong>4</strong> check-ins</span><span className="positive">+12% <small>vs last week</small></span></div></section> }
+function MomentsCard() { return <section className="moments-card"><div className="section-heading"><div><span className="section-kicker">RECENT MOMENTS</span><h2>Your reflections</h2></div><button className="more-button" aria-label="More reflections"><MoreHorizontal aria-hidden="true" /></button></div><div className="moment"><span>Sep 11</span><p>“I noticed I was carrying more than I needed to.”</p><Heart aria-hidden="true" /></div><div className="moment"><span>Sep 09</span><p>“A small walk changed the shape of my afternoon.”</p><Heart aria-hidden="true" /></div><button className="journal-button">Open journal <ArrowUpRight aria-hidden="true" /></button></section> }
+
+function ExploreView({ saved, setSaved }: { saved: string[]; setSaved: (v: string[]) => void }) {
+  const [filter, setFilter] = useState('All'); const [query, setQuery] = useState(''); const filters = ['All', 'Breathe', 'Reflect', 'Move', 'Rest'];
+  const visible = useMemo(() => resources.filter((item) => (filter === 'All' || item.category === filter) && item.title.toLowerCase().includes(query.toLowerCase())), [filter, query])
+  return <div className="page-view"><div className="page-heading"><div><p className="eyebrow">A library for your inner world</p><h1>Explore practices<span className="sun-dot">.</span></h1><p className="intro">Follow your curiosity. There is no wrong place to begin.</p></div><div className="saved-count"><Bookmark aria-hidden="true" /><strong>{saved.length}</strong><span>saved</span></div></div><section className="featured-practice"><div><span className="hero-label"><Sparkles aria-hidden="true" /> FEATURED PRACTICE</span><h2>Come back to center</h2><p>A five-minute audio-guided practice for when everything feels a little loud.</p><button className="primary-button"><Play aria-hidden="true" /> Begin practice</button></div><div className="featured-orb"><Wind aria-hidden="true" /></div></section><div className="library-toolbar"><div className="filter-list">{filters.map((item) => <button key={item} className={filter === item ? 'filter-active' : ''} onClick={() => setFilter(item)}>{item}</button>)}</div><label className="search-field"><Search aria-hidden="true" /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search practices" aria-label="Search practices" /></label></div><div className="resource-grid">{visible.map((item) => { const Icon = item.icon; const isSaved = saved.includes(item.title); return <article className={`resource-card resource-${item.tone}`} key={item.title}><div className="resource-top"><div className="resource-icon"><Icon aria-hidden="true" /></div><button className={`save-button ${isSaved ? 'is-saved' : ''}`} onClick={() => setSaved(isSaved ? saved.filter((title) => title !== item.title) : [...saved, item.title])} aria-label={`${isSaved ? 'Remove' : 'Save'} ${item.title}`}><Bookmark aria-hidden="true" /></button></div><span className="activity-tag">{item.category.toUpperCase()}</span><h3>{item.title}</h3><p>{item.detail}</p><footer><span><Timer aria-hidden="true" /> {item.time}</span><button className="card-arrow" aria-label={`Open ${item.title}`}><ArrowUpRight aria-hidden="true" /></button></footer></article>})}</div></div>
 }
 
-function ActivityCard({ activity, completed, onComplete }: { activity: typeof activities[number]; completed: boolean; onComplete: () => void }) {
-  const Icon = activity.icon
-  return <article className={`activity-card activity-${activity.color} ${completed ? 'activity-complete' : ''}`}><div className="activity-icon"><Icon aria-hidden="true" /></div><div className="activity-copy"><span className="activity-tag">{completed ? 'COMPLETED' : 'FOR YOU'}</span><h3>{activity.title}</h3><p>{activity.detail}</p><span className="activity-time"><Timer aria-hidden="true" /> {activity.time}</span></div><button className="activity-action" onClick={onComplete} aria-label={completed ? `Completed: ${activity.title}` : `Start ${activity.title}`}>{completed ? <Check aria-hidden="true" /> : <Play aria-hidden="true" />}</button></article>
+function JournalView({ entries, setEntries }: { entries: { text: string; date: string; mood: string }[]; setEntries: (v: { text: string; date: string; mood: string }[]) => void }) {
+  const [text, setText] = useState(''); const [showComposer, setShowComposer] = useState(false); const prompts = ['What is asking for your attention today?', 'Where did you find a little ease?', 'What would you like to remember about this moment?'];
+  return <div className="page-view"><div className="page-heading"><div><p className="eyebrow">A place to meet yourself</p><h1>Your journal<span className="sun-dot">.</span></h1><p className="intro">No perfect words required. Just an honest moment.</p></div><button className="primary-button" onClick={() => setShowComposer(true)}><Plus aria-hidden="true" /> New entry</button></div><section className="journal-prompt"><div><span className="section-kicker"><Sparkles aria-hidden="true" /> TODAY&apos;S PROMPT</span><h2>{prompts[entries.length % prompts.length]}</h2><p>Take a breath, then let the first true thing arrive.</p></div><BookOpen aria-hidden="true" /></section>{showComposer && <section className="entry-composer"><div className="composer-heading"><h2>A few words, if you&apos;d like.</h2><button className="icon-button" onClick={() => setShowComposer(false)} aria-label="Close entry composer"><X aria-hidden="true" /></button></div><textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="Write freely here..." aria-label="Journal entry" /><div className="composer-footer"><span>Private on this device</span><button className="primary-button" disabled={!text.trim()} onClick={() => { setEntries([{ text, date: 'Today', mood: 'Present' }, ...entries]); setText(''); setShowComposer(false) }}>Save entry</button></div></section>}<div className="journal-layout"><section className="entry-list"><div className="section-heading"><div><span className="section-kicker">YOUR NOTES</span><h2>Recent reflections</h2></div><span className="entry-total">{entries.length} entries</span></div>{entries.map((entry, i) => <article className="journal-entry" key={`${entry.text}-${i}`}><div className="entry-meta"><span>{entry.date}</span><span className="mood-badge">{entry.mood}</span></div><p>{entry.text}</p><button className="more-button" aria-label="Entry options"><MoreHorizontal aria-hidden="true" /></button></article>)}</section><aside className="prompt-list"><span className="section-kicker">KEEP GOING</span><h2>Gentle prompts</h2>{prompts.map((prompt) => <button key={prompt}>{prompt}<ChevronRight aria-hidden="true" /></button>)}</aside></div></div>
 }
+
+function SupportView({ onChat }: { onChat: () => void }) { const [open, setOpen] = useState(0); const faqs = [['What is Ward?', 'Ward is a supportive wellness companion designed to help you slow down, name what is present, and find a next gentle step.'], ['Is MindGuard a replacement for therapy?', 'No. MindGuard offers wellness practices and reflection tools, but it is not medical care or a replacement for a qualified professional.'], ['How private are my reflections?', 'Your journal is kept locally in this frontend-only experience. You are always in control of what you write and keep.']]; return <div className="page-view"><div className="page-heading"><div><p className="eyebrow">You do not have to do this alone</p><h1>Support<span className="sun-dot">.</span></h1><p className="intro">A few ways to find steadiness, right when you need it.</p></div></div><div className="support-grid"><section className="ward-support"><WardOrb small /><div><span className="hero-label">YOUR COMPANION</span><h2>Talk it through with Ward.</h2><p>A listening space for the things that feel hard to carry by yourself.</p><button className="primary-button" onClick={onChat}><MessageCircle aria-hidden="true" /> Open Ward</button></div></section><section className="crisis-card"><ShieldCheck aria-hidden="true" /><div><span className="section-kicker">IF YOU NEED URGENT HELP</span><h2>You deserve immediate support.</h2><p>If you may hurt yourself or someone else, call emergency services. In the U.S., call or text 988 for the Suicide & Crisis Lifeline.</p><button className="outline-button">View crisis resources <ArrowUpRight aria-hidden="true" /></button></div></section></div><section className="faq-section"><div><span className="section-kicker">COMMON QUESTIONS</span><h2>How MindGuard works</h2></div><div className="faq-list">{faqs.map(([question, answer], i) => <div className={`faq-item ${open === i ? 'faq-open' : ''}`} key={question}><button onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i}><span>{question}</span><ChevronDown aria-hidden="true" /></button>{open === i && <p>{answer}</p>}</div>)}</div></section></div> }
+
+function ProfileView() { const [name, setName] = useState('Alex'); const [editing, setEditing] = useState(false); const [notifications, setNotifications] = useState(true); const [gentleMode, setGentleMode] = useState(false); return <div className="page-view"><div className="page-heading"><div><p className="eyebrow">A space that feels like yours</p><h1>Your profile<span className="sun-dot">.</span></h1><p className="intro">Shape MindGuard around the way you want to be supported.</p></div></div><div className="profile-layout"><section className="profile-card"><div className="large-avatar">{name.charAt(0)}</div>{editing ? <input className="profile-name-input" value={name} onChange={(e) => setName(e.target.value)} aria-label="Your name" /> : <h2>{name}</h2>}<p>Growing daily</p><button className="text-button" onClick={() => setEditing(!editing)}>{editing ? 'Save name' : 'Edit profile'} <ArrowUpRight aria-hidden="true" /></button><div className="profile-stats"><div><strong>6</strong><span>day streak</span></div><div><strong>24</strong><span>check-ins</span></div><div><strong>18</strong><span>reflections</span></div></div></section><section className="settings-card"><div className="section-heading"><div><span className="section-kicker"><Settings aria-hidden="true" /> PREFERENCES</span><h2>How it feels</h2></div></div><div className="setting-row"><div><Bell aria-hidden="true" /><div><strong>Daily reminders</strong><span>A gentle nudge to check in</span></div></div><button className={`toggle ${notifications ? 'toggle-on' : ''}`} onClick={() => setNotifications(!notifications)} aria-pressed={notifications}><i /></button></div><div className="setting-row"><div><Palette aria-hidden="true" /><div><strong>Extra gentle mode</strong><span>Keep language especially soft</span></div></div><button className={`toggle ${gentleMode ? 'toggle-on' : ''}`} onClick={() => setGentleMode(!gentleMode)} aria-pressed={gentleMode}><i /></button></div><div className="setting-row"><div><UserRound aria-hidden="true" /><div><strong>Support style</strong><span>Reflective and spacious</span></div></div><button className="setting-select">Reflective <ChevronDown aria-hidden="true" /></button></div></section></div><section className="wellness-note"><Leaf aria-hidden="true" /><div><strong>Your wellness snapshot</strong><p>You&apos;ve checked in 4 times this week. The small moments are adding up.</p></div><ChevronRight aria-hidden="true" /></section></div> }
 
 export default function Page() {
-  const [active, setActive] = useState('Today')
-  const [mood, setMood] = useState<string | null>(null)
-  const [completed, setCompleted] = useState<number[]>([])
-  const [showChat, setShowChat] = useState(false)
-  const [affirmation, setAffirmation] = useState(true)
-
-  return <div className="app-shell">
-    <SideNav active={active} onChange={setActive} />
-    <main className="main-content">
-      <header className="topbar"><button className="mobile-menu" aria-label="Open navigation"><Menu aria-hidden="true" /></button><div className="breadcrumb"><span>Tuesday, September 12</span><span className="breadcrumb-dot">/</span><strong>{active}</strong></div><div className="top-actions"><button className="icon-button" aria-label="Search"><Search aria-hidden="true" /></button><button className="help-button" onClick={() => setShowChat(true)}><MessageCircle aria-hidden="true" /> <span>Talk to Ward</span></button></div></header>
-      <div className="content-wrap">
-        <section className="welcome-row"><div><p className="eyebrow">A soft place to land</p><h1>Good morning, Alex<span className="sun-dot">.</span></h1><p className="intro">You don&apos;t have to have it all figured out. Just be here for this moment.</p></div><div className="streak-card"><div className="streak-flame">✦</div><div><strong>6 day</strong><span>mindful streak</span></div><div className="streak-progress"><i /><i /><i /><i /><i /><i className="filled" /><i className="today" /></div></div></section>
-        <section className="ward-hero"><div className="hero-copy"><span className="hero-label"><Sparkles aria-hidden="true" /> YOUR COMPANION</span><h2>Meet Ward.</h2><p>Thoughtful support, whenever you need a little more room to breathe. No judgment, no fixing — just a place to start.</p><button className="text-button" onClick={() => setShowChat(true)}>Say hello <ArrowUpRight aria-hidden="true" /></button></div><WardOrb /></section>
-        <div className="dashboard-grid"><div className="left-column"><MoodCheckIn selected={mood} onSelect={setMood} /><section className="section-block"><div className="section-heading"><div><span className="section-kicker"><Leaf aria-hidden="true" /> A LITTLE SOMETHING</span><h2>Made for your moment</h2></div><button className="see-all" onClick={() => setActive('Explore')}>See all <ChevronRight aria-hidden="true" /></button></div><div className="activity-list">{activities.map((activity, index) => <ActivityCard key={activity.title} activity={activity} completed={completed.includes(index)} onComplete={() => setCompleted((current) => current.includes(index) ? current.filter((item) => item !== index) : [...current, index])} />)}</div></section></div><aside className="right-column"><section className="surface rhythm-card"><div className="section-heading"><div><span className="section-kicker">YOUR RHYTHM</span><h2>This week</h2></div><button className="more-button" aria-label="More rhythm options"><MoreHorizontal aria-hidden="true" /></button></div><div className="week-graph"><div className="graph-line" /><div className="graph-days">{['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => <div key={`${day}-${i}`} className={i === 1 ? 'graph-day-current' : ''}><span className={`graph-bar graph-bar-${i}`} /><small>{day}</small></div>)}</div></div><div className="rhythm-footer"><span><strong>4</strong> check-ins</span><span className="positive">+12% <small>vs last week</small></span></div></section>{affirmation && <section className="affirmation-card"><button className="close-affirmation" onClick={() => setAffirmation(false)} aria-label="Dismiss affirmation"><X aria-hidden="true" /></button><div className="affirmation-mark">“</div><p>You are allowed to take things one breath at a time.</p><span>— a note for today</span></section>}<section className="moments-card"><div className="section-heading"><div><span className="section-kicker">RECENT MOMENTS</span><h2>Your reflections</h2></div><button className="add-button" aria-label="Add reflection"><Plus aria-hidden="true" /></button></div><div className="moment-entry"><div className="moment-icon"><Heart aria-hidden="true" /></div><div><p>“I noticed I was holding my breath...”</p><span>Yesterday · 9:42 AM</span></div><ChevronRight aria-hidden="true" /></div><button className="journal-button" onClick={() => setActive('Journal')}>Open journal <ArrowUpRight aria-hidden="true" /></button></section></aside></div>
-        <p className="disclaimer">MindGuard is a wellness companion, not a medical service. If you&apos;re in crisis, please contact <button>988 Suicide &amp; Crisis Lifeline</button> or your local emergency services.</p>
-      </div>
-    </main>
-    <nav className="bottom-nav" aria-label="Mobile navigation">{[{ label: 'Today', icon: Home }, { label: 'Explore', icon: Search }, { label: 'Journal', icon: BookOpen }].map(({ label, icon: Icon }) => <button key={label} className={active === label ? 'bottom-active' : ''} onClick={() => setActive(label)}><Icon aria-hidden="true" /><span>{label}</span></button>)}</nav>
-    {showChat && <div className="chat-overlay" role="dialog" aria-modal="true" aria-labelledby="chat-title"><div className="chat-panel"><div className="chat-header"><div className="chat-title"><WardOrb small /><div><span>WARD</span><h2 id="chat-title">A listening space</h2></div></div><button className="icon-button" onClick={() => setShowChat(false)} aria-label="Close chat"><X aria-hidden="true" /></button></div><div className="chat-body"><div className="chat-message ward-message">Hi Alex. I&apos;m here with you. What feels most present right now?</div><div className="chat-suggestion">I&apos;m feeling a little overwhelmed</div><div className="chat-suggestion">I want to celebrate something</div></div><form className="chat-composer" onSubmit={(event) => { event.preventDefault(); setShowChat(false) }}><input aria-label="Message Ward" placeholder="Write what&apos;s on your mind..." /><button type="submit" aria-label="Send message"><ArrowUpRight aria-hidden="true" /></button></form><p className="chat-note">Ward is a supportive wellness companion, not a crisis service.</p></div></div>}
-  </div>
+  const [active, setActive] = useState<View>('Today'); const [mood, setMood] = useState<string | null>(null); const [completed, setCompleted] = useState<number[]>([]); const [showChat, setShowChat] = useState(false); const [saved, setSaved] = useState<string[]>([]); const [entries, setEntries] = useState([{ text: 'I noticed I was carrying more than I needed to.', date: 'Sep 11', mood: 'Present' }, { text: 'A small walk changed the shape of my afternoon.', date: 'Sep 09', mood: 'Grateful' }]);
+  const page = active === 'Today' ? <TodayView mood={mood} setMood={setMood} completed={completed} setCompleted={setCompleted} onExplore={() => setActive('Explore')} onChat={() => setShowChat(true)} /> : active === 'Explore' ? <ExploreView saved={saved} setSaved={setSaved} /> : active === 'Journal' ? <JournalView entries={entries} setEntries={setEntries} /> : active === 'Support' ? <SupportView onChat={() => setShowChat(true)} /> : <ProfileView />;
+  return <div className="app-shell"><SideNav active={active} onChange={setActive} /><main className="main-content"><header className="topbar"><button className="mobile-menu" aria-label="Open navigation"><Menu aria-hidden="true" /></button><div className="breadcrumb"><span>Tuesday, September 12</span><span className="breadcrumb-dot">/</span><strong>{active}</strong></div><div className="top-actions"><button className="icon-button" aria-label="Search" onClick={() => setActive('Explore')}><Search aria-hidden="true" /></button><button className="help-button" onClick={() => setShowChat(true)}><MessageCircle aria-hidden="true" /> <span>Talk to Ward</span></button></div></header><div className="content-wrap">{page}<p className="disclaimer">MindGuard is a wellness companion, not a medical service. If you&apos;re in crisis, please contact <button>988 Suicide &amp; Crisis Lifeline</button> or your local emergency services.</p></div></main><nav className="bottom-nav" aria-label="Mobile navigation">{([{ label: 'Today', icon: Home }, { label: 'Explore', icon: Search }, { label: 'Journal', icon: BookOpen }, { label: 'Profile', icon: UserRound }] as { label: View; icon: typeof Home }[]).map(({ label, icon: Icon }) => <button key={label} className={active === label ? 'bottom-active' : ''} onClick={() => setActive(label)}><Icon aria-hidden="true" /><span>{label}</span></button>)}</nav>{showChat && <div className="chat-overlay" role="dialog" aria-modal="true" aria-labelledby="chat-title"><div className="chat-panel"><div className="chat-header"><div className="chat-title"><WardOrb small /><div><span>WARD</span><h2 id="chat-title">A listening space</h2></div></div><button className="icon-button" onClick={() => setShowChat(false)} aria-label="Close chat"><X aria-hidden="true" /></button></div><div className="chat-body"><div className="chat-message ward-message">Hi Alex. I&apos;m here with you. What feels most present right now?</div><button className="chat-suggestion" onClick={() => setShowChat(false)}>I&apos;m feeling a little overwhelmed</button><button className="chat-suggestion" onClick={() => setShowChat(false)}>I want to celebrate something</button></div><form className="chat-composer" onSubmit={(event) => { event.preventDefault(); setShowChat(false) }}><input aria-label="Message Ward" placeholder="Write what&apos;s on your mind..." /><button type="submit" aria-label="Send message"><ArrowUpRight aria-hidden="true" /></button></form><p className="chat-note">Ward is a supportive wellness companion, not a crisis service.</p></div></div>}</div>
 }

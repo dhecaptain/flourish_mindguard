@@ -62,3 +62,41 @@ export const wellnessProfile = pgTable('mindguard_wellness_profiles', {
   gentleModeEnabled: boolean('gentle_mode_enabled').notNull().default(false),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+
+export const moodEntries = pgTable('mindguard_mood_entries', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull(),
+  mood: text('mood').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
+export const journalEntries = pgTable('mindguard_journal_entries', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull(),
+  content: text('content').notNull(),
+  mood: text('mood'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
+export const activities = pgTable('mindguard_activities', {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  category: text('category').notNull(),
+  description: text('description').notNull(),
+  instructions: text('instructions').notNull(),
+  estDuration: integer('est_duration').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
+export const activityCompletions = pgTable('mindguard_activity_completions', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull(),
+  activityId: text('activity_id').notNull(),
+  completedAt: timestamp('completed_at').notNull().defaultNow(),
+})
+
+export const savedActivities = pgTable('mindguard_saved_activities', {
+  userId: text('user_id').notNull(),
+  activityId: text('activity_id').notNull(),
+  savedAt: timestamp('saved_at').notNull().defaultNow(),
+})

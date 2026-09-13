@@ -22,7 +22,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
       ? await authClient.signUp.email({ name: name.trim(), email, password })
       : await authClient.signIn.email({ email, password })
     if (result.error) setError('We could not complete that request. Please check your details and try again.')
-    else { router.push('/'); router.refresh() }
+    else { router.push('/dashboard'); router.refresh() }
     setPending(false)
   }
 

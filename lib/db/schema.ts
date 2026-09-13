@@ -60,6 +60,9 @@ export const wellnessProfile = pgTable('mindguard_wellness_profiles', {
   streak: integer('streak').notNull().default(0),
   notificationsEnabled: boolean('notifications_enabled').notNull().default(true),
   gentleModeEnabled: boolean('gentle_mode_enabled').notNull().default(false),
+  hasOnboarded: boolean('has_onboarded').notNull().default(false),
+  primaryFocus: text('primary_focus').notNull().default('feeling steady'),
+  reminderTime: text('reminder_time'),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
@@ -99,4 +102,20 @@ export const savedActivities = pgTable('mindguard_saved_activities', {
   userId: text('user_id').notNull(),
   activityId: text('activity_id').notNull(),
   savedAt: timestamp('saved_at').notNull().defaultNow(),
+})
+
+export const insightSummaries = pgTable('mindguard_insights', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull(),
+  periodStart: timestamp('period_start').notNull(),
+  periodEnd: timestamp('period_end').notNull(),
+  summary: text('summary_text').notNull(),
+  createdAt: timestamp('generated_at').notNull().defaultNow(),
+})
+
+export const feedbackMessages = pgTable('mindguard_feedback_messages', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull(),
+  message: text('message').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 })

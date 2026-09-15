@@ -63,6 +63,11 @@ export const wellnessProfile = pgTable('mindguard_wellness_profiles', {
   hasOnboarded: boolean('has_onboarded').notNull().default(false),
   primaryFocus: text('primary_focus').notNull().default('feeling steady'),
   reminderTime: text('reminder_time'),
+  morningReminder: boolean('morning_reminder').notNull().default(true),
+  middayReminder: boolean('midday_reminder').notNull().default(true),
+  eveningReminder: boolean('evening_reminder').notNull().default(true),
+  weeklyInsightsEnabled: boolean('weekly_insights_enabled').notNull().default(true),
+  hasSeenSafetyNotice: boolean('has_seen_safety_notice').notNull().default(false),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 

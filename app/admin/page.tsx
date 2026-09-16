@@ -86,7 +86,7 @@ export default async function AdminPage() {
           <p className="eyebrow">Aggregate Platform Analytics</p>
           <h1>Admin Overview<span className="sun-dot">.</span></h1>
           <p className="intro">
-            High-level metrics and aggregate activity across MindGuard.
+            High-level metrics and aggregate activity across Tulia.
           </p>
         </div>
       </div>

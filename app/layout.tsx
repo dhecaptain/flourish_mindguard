@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'MindGuard — A softer way to feel supported',
+  title: 'Tulia — A softer way to feel supported',
   description: 'A thoughtful wellness companion for daily check-ins, reflection, and small moments of support.',
   generator: 'v0.app',
 }

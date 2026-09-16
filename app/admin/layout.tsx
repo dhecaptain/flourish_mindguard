@@ -23,7 +23,7 @@ export default async function AdminLayout({
         <div className="brand-mark">
           <span>m</span>
         </div>
-        <p className="brand-name">mindguard admin</p>
+        <p className="brand-name">tulia admin</p>
         <nav className="nav-links" aria-label="Admin navigation">
           <Link href="/admin" className="nav-link">
             <BarChart3 aria-hidden="true" />

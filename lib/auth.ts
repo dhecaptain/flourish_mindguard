@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth'
+import { admin } from 'better-auth/plugins'
 import { eq } from 'drizzle-orm'
 import { pool, db } from '@/lib/db'
 import { activityCompletions, chatMessages, feedbackMessages, insightSummaries, journalEntries, moodEntries, savedActivities, wellnessProfile } from '@/lib/db/schema'
@@ -13,7 +14,9 @@ const developmentOrigins = [
 
 export const auth = betterAuth({
   database: pool,
-  baseURL: process.env.BETTER_AUTH_URL ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.V0_RUNTIME_URL),
+  secret: process.env.BETTER_AUTH_SECRET ?? 'mindguard_default_secret_key_123456789',
+  plugins: [admin()],
+  baseURL: process.env.BETTER_AUTH_URL ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.V0_RUNTIME_URL ?? 'http://localhost:3000'),
   emailAndPassword: { enabled: true, autoSignIn: true },
   user: {
     deleteUser: {

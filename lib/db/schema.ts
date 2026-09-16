@@ -6,6 +6,10 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('emailVerified').notNull().default(false),
   image: text('image'),
+  role: text('role'),
+  banned: boolean('banned').default(false),
+  banReason: text('banReason'),
+  banExpires: timestamp('banExpires'),
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 })
@@ -19,6 +23,7 @@ export const session = pgTable('session', {
   ipAddress: text('ipAddress'),
   userAgent: text('userAgent'),
   userId: text('userId').notNull(),
+  impersonatedBy: text('impersonatedBy'),
 })
 
 export const account = pgTable('account', {
@@ -122,5 +127,26 @@ export const feedbackMessages = pgTable('mindguard_feedback_messages', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull(),
   message: text('message').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
+export const crisisEvents = pgTable('mindguard_crisis_events', {
+  id: text('id').primaryKey(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
+export const safetyPlans = pgTable('mindguard_safety_plans', {
+  userId: text('user_id').primaryKey(),
+  emergencyContacts: text('emergency_contacts'),
+  copingStrategies: text('coping_strategies'),
+  safePlaces: text('safe_places'),
+  warningSigns: text('warning_signs'),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})
+
+export const systemAnnouncements = pgTable('mindguard_announcements', {
+  id: text('id').primaryKey(),
+  message: text('message').notNull(),
+  active: boolean('active').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })

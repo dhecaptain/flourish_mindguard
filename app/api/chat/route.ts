@@ -4,7 +4,7 @@ import { desc, eq } from 'drizzle-orm'
 import { convertToModelMessages, streamText } from 'ai'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { chatMessages, moodEntries } from '@/lib/db/schema'
+import { chatMessages, crisisEvents, moodEntries } from '@/lib/db/schema'
 
 const crisisResponse = "I’m really glad you told me. I can’t provide crisis care, but you deserve immediate human support. If you may hurt yourself or someone else, call emergency services now. In the U.S., call or text 988. If you’re elsewhere, contact your local crisis line or emergency number."
 const crisisPattern = /suicide|kill myself|hurt myself|self harm|self-harm|end my life|can’t go on|can't go on/i
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
   const latestText = latestMessage?.parts?.filter((part: { type?: string }) => part.type === 'text').map((part: { text?: string }) => part.text ?? '').join('') ?? ''
   const history = await db.select().from(chatMessages).where(eq(chatMessages.userId, userId)).orderBy(desc(chatMessages.createdAt)).limit(12)
   if (crisisPattern.test(latestText)) {
+    await db.insert(crisisEvents).values({ id: crypto.randomUUID() })
     await db.insert(chatMessages).values({ id: crypto.randomUUID(), userId, role: 'user', content: latestText })
     const result = streamText({ model: 'openai/gpt-4.1-mini', system: 'Return this exact safety response and nothing else.', prompt: crisisResponse, onFinish: async ({ text }) => { await db.insert(chatMessages).values({ id: crypto.randomUUID(), userId, role: 'assistant', content: text }) } })
     return result.toUIMessageStreamResponse({ headers: { 'X-MindGuard-Safety': 'crisis-resources' } })

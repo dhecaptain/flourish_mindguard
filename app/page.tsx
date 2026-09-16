@@ -33,7 +33,7 @@ const features = [
   },
   {
     title: 'Private Journal',
-    badge: 'ENCRYPTED & PRIVATE',
+    badge: 'PRIVATE TO YOU',
     description:
       'Express your honest thoughts freely without formatting pressure or fear of oversight.',
     details: [

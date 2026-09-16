@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth'
 import { admin } from 'better-auth/plugins'
 import { eq } from 'drizzle-orm'
 import { pool, db } from '@/lib/db'
-import { activityCompletions, chatMessages, feedbackMessages, insightSummaries, journalEntries, moodEntries, savedActivities, wellnessProfile } from '@/lib/db/schema'
+import { activityCompletions, chatMessages, feedbackMessages, insightSummaries, journalEntries, moodEntries, safetyPlans, savedActivities, wellnessProfile } from '@/lib/db/schema'
 
 const developmentOrigins = [
   'http://localhost:3000',
@@ -31,6 +31,7 @@ export const auth = betterAuth({
         await db.delete(insightSummaries).where(eq(insightSummaries.userId, userId))
         await db.delete(feedbackMessages).where(eq(feedbackMessages.userId, userId))
         await db.delete(wellnessProfile).where(eq(wellnessProfile.userId, userId))
+        await db.delete(safetyPlans).where(eq(safetyPlans.userId, userId))
       },
     },
   },

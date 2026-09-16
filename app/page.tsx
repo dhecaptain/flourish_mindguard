@@ -98,7 +98,7 @@ const privacyHighlights = [
   },
   {
     title: 'Non-Clinical & Grounded',
-    desc: 'MindGuard does not diagnose. It provides immediate human crisis links whenever urgent support is needed.',
+    desc: 'Tulia does not diagnose. It provides immediate human crisis links whenever urgent support is needed.',
     icon: ShieldCheck,
   },
   {
@@ -110,16 +110,16 @@ const privacyHighlights = [
 
 const faqs = [
   {
-    q: 'Is MindGuard free to use?',
-    a: 'Yes, MindGuard is free for personal daily wellness tracking, journal writing, and chatting with Ward.',
+    q: 'Is Tulia free to use?',
+    a: 'Yes, Tulia is free for personal daily wellness tracking, journal writing, and chatting with Ward.',
   },
   {
     q: 'Can anyone else read my journal or messages with Ward?',
     a: 'No. We enforce a strict privacy boundary. Admins only see aggregate statistics (like total check-ins) and can never access personal entries or messages.',
   },
   {
-    q: 'Can MindGuard replace a therapist or clinical care?',
-    a: 'MindGuard is a gentle companion for mindfulness and self-reflection. It is not clinical treatment, but includes instant crisis hotline links if you ever need human support.',
+    q: 'Can Tulia replace a therapist or clinical care?',
+    a: 'Tulia is a gentle companion for mindfulness and self-reflection. It is not clinical treatment, but includes instant crisis hotline links if you ever need human support.',
   },
 ]
 
@@ -144,7 +144,7 @@ export default function LandingPage() {
       {/* Top Navbar */}
       <nav className="landing-nav">
         <div className="auth-brand">
-          <span>m</span> mindguard
+          <span>m</span> tulia
         </div>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <Link className="auth-back" href="/sign-in">
@@ -166,7 +166,7 @@ export default function LandingPage() {
             Make room for your whole self.
           </h1>
           <p style={{ fontSize: '15px', lineHeight: 1.7, color: '#5f7566', marginTop: '16px' }}>
-            MindGuard is your private companion for daily check-ins, journal reflections, and guided mindfulness practices — designed to bring steadiness to your day.
+            Tulia is your private companion for daily check-ins, journal reflections, and guided mindfulness practices — designed to bring steadiness to your day.
           </p>
           <div className="landing-actions" style={{ gap: '14px', marginTop: '28px' }}>
             <Link className="primary-button" href="/sign-up" style={{ padding: '14px 22px', fontSize: '13px' }}>
@@ -233,7 +233,7 @@ export default function LandingPage() {
             <Sun size={14} /> SIMPLE DAILY RHYTHM
           </span>
           <h2 style={{ font: '400 32px Georgia, serif', color: '#294536', marginTop: '8px' }}>
-            How MindGuard fits into your day.
+            How Tulia fits into your day.
           </h2>
         </div>
 
@@ -267,7 +267,7 @@ export default function LandingPage() {
             Your inner world stays yours.
           </h2>
           <p style={{ color: '#687e70', fontSize: '14px', lineHeight: 1.65 }}>
-            We believe mental wellbeing tools must earn your complete trust. MindGuard is designed with zero-compromise privacy boundaries.
+            We believe mental wellbeing tools must earn your complete trust. Tulia is designed with zero-compromise privacy boundaries.
           </p>
         </div>
 
@@ -322,7 +322,7 @@ export default function LandingPage() {
             Ready to find your steadiness?
           </h2>
           <p style={{ color: '#748078', fontSize: '14px', marginBottom: '28px', lineHeight: 1.6 }}>
-            Join MindGuard today and start your daily practice of mindful reflection.
+            Join Tulia today and start your daily practice of mindful reflection.
           </p>
           <Link className="primary-button" href="/sign-up" style={{ padding: '14px 28px', fontSize: '14px', margin: '0 auto' }}>
             Create your free space <ArrowUpRight size={16} />
@@ -346,10 +346,10 @@ export default function LandingPage() {
         }}
       >
         <div className="auth-brand" style={{ fontSize: '15px' }}>
-          <span>m</span> mindguard
+          <span>m</span> tulia
         </div>
         <p style={{ margin: 0 }}>
-          MindGuard is a wellness companion for reflection and grounding. If you are in crisis, please call or text 988.
+          Tulia is a wellness companion for reflection and grounding. If you are in crisis, please call or text 988.
         </p>
       </footer>
     </main>

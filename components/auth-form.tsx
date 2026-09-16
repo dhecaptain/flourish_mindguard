@@ -31,7 +31,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
     <label>Email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="email" /></label>
     <label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={8} autoComplete={isSignUp ? 'new-password' : 'current-password'} /></label>
     {error && <p className="auth-error" role="alert">{error}</p>}
-    <button className="primary-button auth-submit" type="submit" disabled={pending}>{pending ? 'Opening your space…' : isSignUp ? 'Create my space' : 'Continue to MindGuard'}</button>
-    <p className="auth-switch">{isSignUp ? 'Already have an account?' : 'New to MindGuard?'} <Link href={isSignUp ? '/sign-in' : '/sign-up'}>{isSignUp ? 'Sign in' : 'Create an account'}</Link></p>
+    <button className="primary-button auth-submit" type="submit" disabled={pending}>{pending ? 'Opening your space…' : isSignUp ? 'Create my space' : 'Continue to Tulia'}</button>
+    <p className="auth-switch">{isSignUp ? 'Already have an account?' : 'New to Tulia?'} <Link href={isSignUp ? '/sign-in' : '/sign-up'}>{isSignUp ? 'Sign in' : 'Create an account'}</Link></p>
   </form>
 }

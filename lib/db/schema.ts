@@ -73,6 +73,7 @@ export const wellnessProfile = pgTable('mindguard_wellness_profiles', {
   eveningReminder: boolean('evening_reminder').notNull().default(true),
   weeklyInsightsEnabled: boolean('weekly_insights_enabled').notNull().default(true),
   hasSeenSafetyNotice: boolean('has_seen_safety_notice').notNull().default(false),
+  hasSeenTour: boolean('has_seen_tour').notNull().default(false),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
@@ -126,7 +127,8 @@ export const insightSummaries = pgTable('mindguard_insights', {
 export const feedbackMessages = pgTable('mindguard_feedback_messages', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull(),
-  message: text('message').notNull(),
+  message: text('message'),
+  rating: integer('rating'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 

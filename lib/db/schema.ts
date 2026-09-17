@@ -74,6 +74,8 @@ export const wellnessProfile = pgTable('mindguard_wellness_profiles', {
   weeklyInsightsEnabled: boolean('weekly_insights_enabled').notNull().default(true),
   hasSeenSafetyNotice: boolean('has_seen_safety_notice').notNull().default(false),
   hasSeenTour: boolean('has_seen_tour').notNull().default(false),
+  lastActiveAt: timestamp('last_active_at'),
+  soundEnabled: boolean('sound_enabled').notNull().default(true),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 

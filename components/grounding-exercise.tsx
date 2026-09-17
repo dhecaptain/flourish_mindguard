@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useAmbientSound } from '@/lib/use-ambient-sound'
 import { Eye, TouchpadIcon as Touch, Volume2, Sparkles, Coffee, Check, RotateCcw } from 'lucide-react'
 
 const sensorySteps = [
@@ -15,11 +16,14 @@ export function GroundingExercise() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [inputs, setInputs] = useState<string[]>(Array(5).fill(''))
   const [isCompleted, setIsCompleted] = useState(false)
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const sound = useAmbientSound('Inhale', soundEnabled, 0.1)
 
   const currentStep = sensorySteps[currentStepIndex]
   const Icon = currentStep.icon
 
   const handleNext = () => {
+    if (currentStepIndex === 0) sound.start()
     if (currentStepIndex < sensorySteps.length - 1) {
       setCurrentStepIndex((prev) => prev + 1)
     } else {
@@ -28,6 +32,7 @@ export function GroundingExercise() {
   }
 
   const handleReset = () => {
+    sound.stop()
     setCurrentStepIndex(0)
     setInputs(Array(5).fill(''))
     setIsCompleted(false)
@@ -36,7 +41,7 @@ export function GroundingExercise() {
   return (
     <div className="surface mood-card" style={{ padding: '28px' }}>
       <div className="section-kicker" style={{ marginBottom: '8px' }}>
-        <Sparkles size={14} /> 5-4-3-2-1 GROUNDING TECHNIQUE
+        <Sparkles size={14} /> 5-4-3-2-1 GROUNDING TECHNIQUE <button className="sound-toggle" aria-label={soundEnabled ? 'Mute ambient sound' : 'Enable ambient sound'} onClick={() => { const next = !soundEnabled; setSoundEnabled(next); sound.setEnabled(next) }}>{soundEnabled ? 'Sound on' : 'Sound off'}</button>
       </div>
 
       {isCompleted ? (

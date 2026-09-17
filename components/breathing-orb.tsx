@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Play, Pause, RotateCcw, Volume2 } from 'lucide-react'
+import { Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react'
+import { useAmbientSound } from '@/lib/use-ambient-sound'
 
 type Phase = 'Inhale' | 'Hold' | 'Exhale' | 'Rest'
 
@@ -10,6 +11,8 @@ export function BreathingOrb() {
   const [isRunning, setIsRunning] = useState(false)
   const [phase, setPhase] = useState<Phase>('Inhale')
   const [secondsLeft, setSecondsLeft] = useState(4)
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const sound = useAmbientSound(phase, soundEnabled)
 
   useEffect(() => {
     if (!isRunning) return
@@ -53,6 +56,7 @@ export function BreathingOrb() {
   }, [isRunning, phase, activePattern])
 
   const toggleRun = () => {
+    if (!isRunning) { sound.start() } else { sound.stop() }
     if (!isRunning) {
       setPhase('Inhale')
       setSecondsLeft(4)
@@ -61,6 +65,7 @@ export function BreathingOrb() {
   }
 
   const reset = () => {
+    sound.stop()
     setIsRunning(false)
     setPhase('Inhale')
     setSecondsLeft(4)
@@ -84,7 +89,7 @@ export function BreathingOrb() {
   return (
     <div className="surface mood-card" style={{ padding: '32px', textAlign: 'center' }}>
       <div className="section-kicker" style={{ justifyContent: 'center', marginBottom: '8px' }}>
-        <Volume2 size={14} /> GUIDED BREATHWORK
+        {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />} GUIDED BREATHWORK <button className="sound-toggle" aria-label={soundEnabled ? 'Mute ambient sound' : 'Enable ambient sound'} onClick={() => { const next = !soundEnabled; setSoundEnabled(next); sound.setEnabled(next) }}>{soundEnabled ? 'Sound on' : 'Sound off'}</button>
       </div>
       <h2 style={{ font: '400 24px Georgia, serif', color: '#355542', margin: '0 0 16px' }}>
         Grounding Breathing Exercise

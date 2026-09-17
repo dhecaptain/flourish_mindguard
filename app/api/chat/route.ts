@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     await db.insert(crisisEvents).values({ id: crypto.randomUUID() })
     await db.insert(chatMessages).values({ id: crypto.randomUUID(), userId, role: 'user', content: latestText })
     const result = streamText({ model: 'openai/gpt-4.1-mini', system: 'Return this exact safety response and nothing else.', prompt: crisisResponse, onFinish: async ({ text }) => { await db.insert(chatMessages).values({ id: crypto.randomUUID(), userId, role: 'assistant', content: text }) } })
-    return result.toUIMessageStreamResponse({ headers: { 'X-MindGuard-Safety': 'crisis-resources' } })
+    return result.toUIMessageStreamResponse({ headers: { 'X-Tulia-Safety': 'crisis-resources' } })
   }
   const moods = await db.select().from(moodEntries).where(eq(moodEntries.userId, userId)).orderBy(desc(moodEntries.createdAt)).limit(1)
   await db.insert(chatMessages).values({ id: crypto.randomUUID(), userId, role: 'user', content: latestText })

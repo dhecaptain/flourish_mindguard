@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { TuliaLogo } from '@/components/tulia-logo'
 import {
   ArrowRight,
   ArrowUpRight,
@@ -143,9 +144,7 @@ export default function LandingPage() {
     <main className="landing-page">
       {/* Top Navbar */}
       <nav className="landing-nav">
-        <div className="auth-brand">
-          <span>m</span> tulia
-        </div>
+<TuliaLogo />
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <Link className="auth-back" href="/sign-in">
             Sign in
@@ -345,9 +344,7 @@ export default function LandingPage() {
           fontSize: '12px',
         }}
       >
-        <div className="auth-brand" style={{ fontSize: '15px' }}>
-          <span>m</span> tulia
-        </div>
+<TuliaLogo className="tulia-logo-footer" />
         <p style={{ margin: 0 }}>
           Tulia is a wellness companion for reflection and grounding. If you are in crisis, please call or text 988.
         </p>

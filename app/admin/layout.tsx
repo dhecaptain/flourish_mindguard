@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { Shield, Users, BookOpen, BarChart3, ArrowLeft } from 'lucide-react'
+import { TuliaLogo } from '@/components/tulia-logo'
 
 export default async function AdminLayout({
   children,
@@ -20,10 +21,8 @@ export default async function AdminLayout({
   return (
     <div className="app-shell">
       <aside className="side-nav">
-        <div className="brand-mark">
-          <span>m</span>
-        </div>
-        <p className="brand-name">tulia admin</p>
+        <TuliaLogo compact />
+        <p className="brand-name">admin</p>
         <nav className="nav-links" aria-label="Admin navigation">
           <Link href="/admin" className="nav-link">
             <BarChart3 aria-hidden="true" />
